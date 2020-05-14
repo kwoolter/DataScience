@@ -4,7 +4,7 @@ from .kwutils import *
 
 import os
 
-DATA_FILES_DIR = os.path.join(os.path.dirname(__file__),"FSM")
+DATA_FILES_DIR = os.path.join(os.path.dirname(__file__),"data")
 
 def df_test():
 
@@ -29,6 +29,10 @@ def df_test():
 
 
 def df_test2():
+    LOCAL = "local"
+    REMOTE = "remote"
+
+    STATE_FILE_LOCATION = LOCAL
 
     """ Use state transition data files and navigate them with pandas"""
     title = "Welcome to the finite state machine game!".title()
@@ -38,17 +42,23 @@ def df_test2():
 
     x= input
 
+    # Decide where we are going to source the state transition data from
+    if STATE_FILE_LOCATION == LOCAL:
+        state_file_name = os.path.join(DATA_FILES_DIR, "states.csv")
+        transition_file_name = os.path.join(DATA_FILES_DIR, "state_transitions.csv")
+    else:
+        state_file_name = "https://raw.githubusercontent.com/kwoolter/JackCoding/master/states.csv"
+        transition_file_name = "https://raw.githubusercontent.com/kwoolter/JackCoding/master/state_transitions.csv"
+
     # Load in the states into a data frame
-    file_name = os.path.join(DATA_FILES_DIR, "states.csv")
-    states = pd.read_csv(file_name, index_col="ID")
+    states = pd.read_csv(state_file_name, index_col="ID")
 
     # Load in the state transitions into a data frame
-    file_name = os.path.join(DATA_FILES_DIR, "state_transitions.csv")
-    state_transitions = pd.read_csv(file_name, index_col="Current state")
+    state_transitions = pd.read_csv(transition_file_name, index_col="Current state")
 
     # Initialise the game scores and when they get displayed
     score_names = ("happiness", "health", "hunger", "money", "your_health")
-    score_states = [1, 10, 16]
+    score_states = [1, 10, 17, 30]
     scores = {}
     for score_name in score_names:
         scores[score_name] = 0
